@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+
+# Credenciais GCP (NUNCA sobe isso pro GitHub)
+*.json
+service-account*.json
+gcp-key*.json
+
+# Dados brutos (arquivos grandes)
+data/raw/
+data/processed/
+
+# Jupyter
+.ipynb_checkpoints/
