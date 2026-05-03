@@ -79,6 +79,29 @@ Essa separação garante que, se algo der errado no processamento, sempre existe
 
 ---
 
+### Arquitetura Data Lake + Data Warehouse
+
+Este projeto implementa o padrão **Data Lake + Data Warehouse**, que é a arquitetura mais adotada no mercado hoje.
+
+**Cloud Storage = Data Lake:** o bucket `olist-gcp-pipeline-raw` é o Data Lake do projeto. Os 9 CSVs foram despejados lá em formato bruto, exatamente como vieram da fonte, sem nenhuma transformação. O Data Lake não se preocupa com estrutura, ele armazena qualquer formato em qualquer escala com custo baixo. É a zona de pouso dos dados.
+
+**BigQuery = Data Warehouse:** as 9 tabelas no dataset `olist_ecommerce` são o Data Warehouse. Dados estruturados, com schema definido, otimizados para consultas analíticas SQL. É aqui que as perguntas de negócio são respondidas.
+
+O fluxo é unidirecional:
+
+```
+Cloud Storage (Data Lake) --> BigQuery (Data Warehouse)
+     dados brutos                dados estruturados
+     schema-on-read               schema-on-write
+     armazenamento barato         performance analítica
+```
+
+**Por que não é um Lakehouse?** No Lakehouse, o engine analítico leria diretamente do object storage sem copiar os dados, usando table formats como Delta Lake ou Apache Iceberg para adicionar capacidades transacionais sobre os arquivos brutos. Neste projeto os dados são copiados do Cloud Storage para dentro do BigQuery, caracterizando dois sistemas distintos com papéis complementares.
+
+**OLTP vs OLAP:** o BigQuery é um sistema **OLAP (Online Analytical Processing)**, otimizado para queries analíticas que varrem milhões de linhas. É diferente de um banco de dados **OLTP (Online Transaction Processing)** como PostgreSQL ou MySQL, que são otimizados para operações transacionais do dia a dia como inserções e buscas por registro individual. Ambos usam SQL, mas com finalidades e arquiteturas internas completamente diferentes.
+
+---
+
 ### Serverless
 
 Tanto o **Cloud Functions** quanto o **BigQuery** são serviços **serverless**, ou seja, não existe um servidor ligado 24 horas esperando trabalho. A infraestrutura é alocada dinamicamente quando necessária e desligada em seguida. Você paga apenas pelo tempo de execução real, o que torna o custo próximo de zero para cargas de trabalho intermitentes como pipelines diários.
