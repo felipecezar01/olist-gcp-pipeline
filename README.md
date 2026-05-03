@@ -79,9 +79,9 @@ Essa separação garante que, se algo der errado no processamento, sempre existe
 
 ---
 
-### Arquitetura Data Lake + Data Warehouse
+### Arquitetura Data Lake + Data Warehouse (Lambda Architecture)
 
-Este projeto implementa o padrão **Data Lake + Data Warehouse**, que é a arquitetura mais adotada no mercado hoje.
+Este projeto implementa o padrão **Data Lake + Data Warehouse**, também conhecido como **Lambda Architecture**, termo cunhado por Nathan Marz. Ela propõe separar o ambiente de armazenamento bruto (batch layer) do ambiente analítico otimizado (serving layer), exatamente o que o Cloud Storage e o BigQuery representam aqui. É a arquitetura mais consolidada no mercado antes da popularização do Lakehouse.
 
 **Cloud Storage = Data Lake:** o bucket `olist-gcp-pipeline-raw` é o Data Lake do projeto. Os 9 CSVs foram despejados lá em formato bruto, exatamente como vieram da fonte, sem nenhuma transformação. O Data Lake não se preocupa com estrutura, ele armazena qualquer formato em qualquer escala com custo baixo. É a zona de pouso dos dados.
 
